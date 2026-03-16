@@ -1,65 +1,41 @@
-/* 1 - Reset e base */
-* { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: radial-gradient(1200px 600px at 50% 20%, #0f172a, #020617);
-  color: #e2e8f0;
   display: grid;
   place-items: center;
+  background: #0a0a0a;
+  color: #e2e8f0;
 }
 
-/* 2: wrapper central... */
 .game-wrapper {
   position: relative;
   width: min(96vw, 960px);
-  aspect-ratio: 16 / 9;
-  border-radius: 16px;
+  aspect-ratio: 16/9;
   overflow: hidden;
+  border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.45);
   border: 1px solid rgba(255,255,255,0.08);
+  background-size: cover;
+  background-position: center;
 }
 
-/* 3-canvas ocupa todo o wrapper... */
-#game {
-  width: 100%;
-  height: 100%;
-  display: block;
-  background: linear-gradient(#0b1020, #0a0f1c);
-}
+#game { width: 100%; height: 100%; display: block; }
 
-/* 4 - hud sobreposto */
 .hud {
-  position: absolute;
-  inset: 12px 12px auto 12px;
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  pointer-events: none;
+  position: absolute; top: 12px; left: 12px;
+  display: flex; gap: 16px; align-items: center;
 }
 
-.score {
-  background: rgba(2,6,23,0.6);
+.score, .power {
+  background: rgba(0,0,0,0.6);
   padding: 6px 10px;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.08);
   font-weight: 700;
-  letter-spacing: 0.2px;
-  pointer-events: auto;
 }
 
-.power {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(2,6,23,0.6);
-  padding: 6px 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
-  pointer-events: auto;
-}
-
-.power-label { font-size: 12px; opacity: .85; }
+.power-label { font-size: 12px; opacity: .85; margin-right: 8px; }
 .power-bar {
   width: 200px; height: 10px; border-radius: 999px;
   background: rgba(148,163,184,.2); overflow: hidden;
@@ -73,22 +49,17 @@ body {
 
 .help {
   margin-left: auto;
-  background: rgba(2,6,23,0.6);
+  background: rgba(0,0,0,0.6);
   padding: 6px 10px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
   font-size: 12px;
   opacity: .85;
-  pointer-events: auto;
 }
 
-/* 5: mensagens de estado */
 .msg {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: rgba(2,6,23,0.55);
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background: rgba(0,0,0,0.55);
   backdrop-filter: blur(4px);
   color: #e2e8f0;
   font-size: clamp(16px, 3vw, 28px);
@@ -97,4 +68,4 @@ body {
 }
 .hidden { display: none; }
 .msg strong { display: block; font-size: 1.4em; margin-bottom: .6em; }
-.msg small { opacity: .8; }
+.msg small { opacity: .85; }

@@ -1,5 +1,5 @@
 // =============================
-// 1: setup básico do Canvas e loop
+// setup básico
 // =============================
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -12,11 +12,24 @@ let gameOver = false;
 let paused = false;
 let score = 0;
 
-// mundo rola para a esquerda (runner automático...) a > frente
+const groundY = canvas.height - 100;
 let worldSpeed = 320; // px/s
+let parallaxOffset = 0;
 
 // =============================
-// 2: utilidades simples
+// carregar sprites (SVG)
+// =============================
+const imgPlayer = new Image();
+imgPlayer.src = 'assets/player.png';
+
+const imgObstacle = new Image();
+imgObstacle.src = 'assets/obstacle.png';
+
+const imgOrb = new Image();
+imgOrb.src = 'assets/orb.png';
+
+// ============================= 
+// utilidades
 // =============================
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 function randRange(a, b) { return a + Math.random() * (b - a); }
@@ -24,40 +37,44 @@ function aabb(a, b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-// =============================
-// 3: inputs de (teclado)
-// =============================
-const KEYS = { SPACE: ' ', A: 'a', S: 's' };
+// pressed (edge trigger)
 const down = new Set();
+const pressedState = new Map();
+function pressed(key) {
+  key = key.toLowerCase();
+  const isDown = down.has(key);
+  const wasDown = pressedState.get(key) || false;
+  pressedState.set(key, isDown);
+  return isDown && !wasDown;
+}
 window.addEventListener('keydown', (e) => {
+  // evitar scroll com espaço
   if (e.key === ' ' || e.key === 'Spacebar') e.preventDefault();
-  down.add(e.key.toLowerCase());
-  // reiniciar ao perder
-  if (gameOver && e.key.toLowerCase() === 'r') restart();
-  // pausar
-  if (e.key.toLowerCase() === 'p') paused = !paused;
+  const k = e.key.toLowerCase();
+  down.add(k);
+  if (k === 'p') paused = !paused;
+  if (gameOver && k === 'r') restart();
 });
 window.addEventListener('keyup', (e) => down.delete(e.key.toLowerCase()));
 
 // =============================
-// 4: chão, camadas de fundo (parallax simples) dar um tcham...
+// parallax simples (faixas)
+/// (cores só para dar profundidade adicional ao background.png)
 // =============================
-const groundY = canvas.height - 100;
 const parallax = [
-  { speed: 20,  color: '#0b1227' }, // distante
-  { speed: 60,  color: '#0e1530' }, // médio
-  { speed: 120, color: '#111938' }  // próximo
+  { speed: 20,  color: 'rgba(17,24,39,0.35)', h: 60, y: 60 },
+  { speed: 60,  color: 'rgba(15,23,42,0.45)', h: 70, y: 120 },
+  { speed: 120, color: 'rgba(2,6,23,0.6)',   h: 80, y: 180 },
 ];
-let parallaxOffset = 0;
 
 // =============================
-// 5: player (Natan) - pouco de física e pulo duplo, 
+// jogador (Natan) — pulo duplo, ataque
 // =============================
 class Player {
   constructor() {
-    this.x = 160;          // posição fixa no X (o mundo que anda)
-    this.y = groundY - 64; // alinhado ao chão
-    this.w = 48;
+    this.x = 160;
+    this.y = groundY - 64;
+    this.w = 64;
     this.h = 64;
     this.vy = 0;
     this.gravity = 2000;
@@ -72,17 +89,17 @@ class Player {
     this.vy += this.gravity * dt;
     this.y += this.vy * dt;
 
-    // aterrissagem
+    // chão
     if (this.y + this.h >= groundY) {
       this.y = groundY - this.h;
       this.vy = 0;
-      this.jumpsLeft = 2; // reseta duplo pulo ao tocar o chão
+      this.jumpsLeft = 2;
     }
 
-    // entrada: pular (duplo pulo)
+    // pulo (duplo)
     if (pressed(' ')) this.jump();
 
-    // ataque básico (curto alcance)
+    // atacar
     if (pressed('a')) this.attackTimer = 0.15;
 
     // timers
@@ -96,38 +113,29 @@ class Player {
     }
   }
   draw(g) {
-    // corpo
-    g.fillStyle = this.hurtTimer > 0 ? '#ef4444' : '#60a5fa';
-    g.fillRect(this.x, this.y, this.w, this.h);
+    g.drawImage(imgPlayer, this.x, this.y, this.w, this.h);
 
-    // “guitarra” como retângulo frontal quando atacando...
+    // “guitarra ativa” (ataque curto)
     if (this.attackTimer > 0) {
+      g.save();
+      g.globalAlpha = 0.9;
       g.fillStyle = '#fbbf24';
-      g.fillRect(this.x + this.w, this.y + 20, 24, 12);
+      g.fillRect(this.x + this.w - 4, this.y + 22, 26, 10);
+      g.restore();
     }
   }
 }
 const player = new Player();
 
-// Helper para “edge trigger” (detectar pressionado no frame)
-const pressedState = new Map();
-function pressed(key) {
-  key = key.toLowerCase();
-  const isDown = down.has(key);
-  const wasDown = pressedState.get(key) || false;
-  pressedState.set(key, isDown);
-  return isDown && !wasDown;
-}
-
 // =============================
-// 6: obstáculos (amplificadores) e os orbes
+// obstáculos (amplificadores/inimigos) e Orbes
 // =============================
 class Obstacle {
   constructor(x) {
-    const h = randRange(40, 90); // altura variável
+    const h = randRange(44, 84);
     this.x = x;
     this.y = groundY - h;
-    this.w = randRange(28, 48);
+    this.w = randRange(36, 56);
     this.h = h;
     this.dead = false;
   }
@@ -136,17 +144,14 @@ class Obstacle {
     this.x -= worldSpeed * dt;
     if (this.x + this.w < -50) this.dead = true;
   }
-  draw(g) {
-    g.fillStyle = '#9333ea';
-    g.fillRect(this.x, this.y, this.w, this.h);
-  }
+  draw(g) { g.drawImage(imgObstacle, this.x, this.y, this.w, this.h); }
 }
 
 class Orb {
   constructor(x) {
     this.x = x;
     this.y = groundY - 140 - randRange(0, 60);
-    this.w = 18; this.h = 18;
+    this.w = 20; this.h = 20;
     this.dead = false;
   }
   get bbox() { return this; }
@@ -154,12 +159,7 @@ class Orb {
     this.x -= worldSpeed * dt;
     if (this.x + this.w < -50) this.dead = true;
   }
-  draw(g) {
-    g.fillStyle = '#22d3ee';
-    g.beginPath();
-    g.arc(this.x + this.w/2, this.y + this.h/2, this.w/2, 0, Math.PI*2);
-    g.fill();
-  }
+  draw(g) { g.drawImage(imgOrb, this.x, this.y, this.w, this.h); }
 }
 
 const obstacles = [];
@@ -168,10 +168,10 @@ let spawnObsTimer = 0;
 let spawnOrbTimer = 1.5;
 
 // =============================
-// 7: superpoder (relâmpagos) + barra de poder
+// superpoder (relâmpagos)
 // =============================
-let power = 0;               // 0 a 100
-let lightningTimer = 0;      // duração ativa do especial
+let power = 0;          // 0..100
+let lightningTimer = 0; // ativo
 function gainPower(v) { power = clamp(power + v, 0, 100); }
 function useSpecial() {
   if (power >= 100 && lightningTimer <= 0) {
@@ -181,21 +181,21 @@ function useSpecial() {
 }
 
 // =============================
-// 8: loop principal: update
+// update principal
 // =============================
 function update(dt) {
   if (paused || gameOver) return;
 
-  // Parallax
+  // parallax “faixas”
   parallaxOffset += worldSpeed * dt;
 
-  // Player
+  // player
   player.update(dt);
 
-  // Especial (S)
+  // especial
   if (pressed('s')) useSpecial();
 
-  // Spawns
+  // spawns
   spawnObsTimer -= dt;
   spawnOrbTimer -= dt;
   if (spawnObsTimer <= 0) {
@@ -203,11 +203,11 @@ function update(dt) {
     spawnObsTimer = randRange(0.9, 1.6);
   }
   if (spawnOrbTimer <= 0) {
-    orbs.push(new Orb(canvas.width + randRange(0, 40)));
+    orbs.push(new Orb(canvas.width + randRange(0, 60)));
     spawnOrbTimer = randRange(1.6, 2.6);
   }
 
-  // atualiza entidades
+  // atualizar
   obstacles.forEach(o => o.update(dt));
   orbs.forEach(o => o.update(dt));
 
@@ -220,10 +220,10 @@ function update(dt) {
     }
   });
 
-  // ataque básico: destrói obstáculo encostado/à frente
+  // ataque curto
   if (player.attackTimer > 0) {
+    const sword = { x: player.x + player.w - 6, y: player.y + 22, w: 28, h: 12 };
     obstacles.forEach(o => {
-      const sword = { x: player.x + player.w, y: player.y + 20, w: 24, h: 12 };
       if (!o.dead && aabb(sword, o.bbox)) {
         o.dead = true;
         score += 50;
@@ -231,7 +231,7 @@ function update(dt) {
     });
   }
 
-  // especial ativo: limpa obstáculos próximos (em “frente”)
+  // especial
   if (lightningTimer > 0) {
     lightningTimer -= dt;
     obstacles.forEach(o => {
@@ -242,39 +242,39 @@ function update(dt) {
     });
   }
 
-  // colisão com obstáculos (sem ataque/especial)
+  // colisão com obstáculo (sem ataque/especial)
   const hit = obstacles.find(o => !o.dead && aabb(player.bbox, o.bbox));
   if (hit && lightningTimer <= 0 && player.attackTimer <= 0) {
-    // game over simples (primeiro protótipo)
     gameOver = true;
-    showMessage("<strong>Você foi atingido!</strong><small>Pressione R para reiniciar · P para pausar</small>");
+    showMessage("<strong>Você foi atingido!</strong><small>R: Reiniciar · P: Pausar</small>");
   }
 
   // limpeza
-  removeDead(obstacles);
-  removeDead(orbs);
+  compact(obstacles);
+  compact(orbs);
 
-  // score sobe com a corrida
+  // score
   score += 60 * dt;
   scoreEl.textContent = Math.floor(score);
 
-  // atualiza barra de poder
+  // HUD
   powerFillEl.style.width = `${power}%`;
 }
 
-function removeDead(arr) {
+function compact(arr) {
   let w = 0;
   for (let i = 0; i < arr.length; i++) if (!arr[i].dead) arr[w++] = arr[i];
   arr.length = w;
 }
 
 // =============================
-// 9: loop principal: render
+// render....
 // =============================
 function render() {
-  // fundo em camadas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawParallax();
+
+  // faixas (sobre o background.svg para profundidade)
+  drawParallaxStrips();
 
   // chão
   drawGround();
@@ -284,19 +284,18 @@ function render() {
   obstacles.forEach(o => o.draw(ctx));
   player.draw(ctx);
 
-  // efeito de relâmpago
+  // efeito relâmpago
   if (lightningTimer > 0) drawLightning();
 }
 
-function drawParallax() {
+function drawParallaxStrips() {
   parallax.forEach((layer, i) => {
-    const speed = layer.speed;
     const tileW = 320;
-    const y = 40 + i * 40;
+    const offset = - (parallaxOffset * (layer.speed / worldSpeed)) % tileW;
+    const y = layer.y;
     ctx.fillStyle = layer.color;
-    const offset = - (parallaxOffset * (speed / worldSpeed)) % tileW;
     for (let x = offset - tileW; x < canvas.width + tileW; x += tileW) {
-      ctx.fillRect(x, y, tileW, 80);
+      ctx.fillRect(x, y, tileW, layer.h);
     }
   });
 }
@@ -304,7 +303,6 @@ function drawParallax() {
 function drawGround() {
   ctx.fillStyle = '#0f172a';
   ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
-  // faixa de textura
   ctx.fillStyle = '#1f2937';
   for (let x = 0; x < canvas.width; x += 32) {
     ctx.fillRect(x - (parallaxOffset % 32), groundY - 6, 16, 6);
@@ -312,7 +310,7 @@ function drawGround() {
 }
 
 function drawLightning() {
-  // pequenos zigue-zagues à frente do player (efeito simples)
+  ctx.save();
   ctx.strokeStyle = 'rgba(186,230,253,0.9)';
   ctx.lineWidth = 2 + Math.random() * 2;
   ctx.beginPath();
@@ -325,43 +323,34 @@ function drawLightning() {
     ctx.lineTo(x, y);
   }
   ctx.stroke();
+  ctx.restore();
 }
 
 // =============================
-// 10 - HUD de mensagens e reinício
+// mensagens e reinício
 // =============================
-function showMessage(html) {
-  msgEl.innerHTML = html;
-  msgEl.classList.remove('hidden');
-}
-function hideMessage() {
-  msgEl.classList.add('hidden');
-}
+function showMessage(html) { msgEl.innerHTML = html; msgEl.classList.remove('hidden'); }
+function hideMessage() { msgEl.classList.add('hidden'); }
 function restart() {
-  // estado padrão
-  obstacles.length = 0;
-  orbs.length = 0;
+  obstacles.length = 0; orbs.length = 0;
   score = 0; power = 0; lightningTimer = 0;
   player.x = 160; player.y = groundY - player.h; player.vy = 0;
   player.jumpsLeft = 2; player.hurtTimer = 0; player.attackTimer = 0;
-  gameOver = false; paused = false;
-  hideMessage();
+  gameOver = false; paused = false; hideMessage();
 }
 
 // =============================
-// 11 - game loop (requestAnimationFrame)
+// game loop
 // =============================
 function loop(ts) {
-  const dt = Math.min(0.032, (ts - lastTime) / 1000); // clamp para estabilidade
+  const dt = Math.min(0.032, (ts - lastTime) / 1000);
   lastTime = ts;
 
   if (!paused) update(dt);
   render();
-
   requestAnimationFrame(loop);
 }
 
-// Inicia
-showMessage("<strong>Temple Of Shadows — Prototype v1</strong><small>Espaço: Pular · A: Atacar · S: Superpoder · P: Pausa · R: Reiniciar</small>");
-setTimeout(hideMessage, 1200);
+showMessage("<strong>Temple Of Shadows — v2</strong><small>Espaço: Pular · A: Atacar · S: Superpoder · P: Pausar · R: Reiniciar</small>");
+setTimeout(hideMessage, 1400);
 requestAnimationFrame(loop);
