@@ -1,35 +1,27 @@
-<!-- html e canvas primeiramente-->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Temple Of Shadows — Prototype v1</title>
+  <title>Temple Of Shadows v2</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- 2 - container do templo of shadows -->
-  <div class="game-wrapper">
-    <!-- Canvas do jogo -->
+  <div class="game-wrapper" style="background-image: url('assets/background.png');">
     <canvas id="game" width="960" height="540"></canvas>
 
-    <!-- 3 - (pontuação, barra de poder, instruções...) -->
     <div class="hud">
       <div class="score">Score: <span id="score">0</span></div>
       <div class="power">
         <div class="power-label">Superpoder</div>
-        <div class="power-bar"><div id="powerFill" class="power-fill" style="width:0%"></div></div>
+        <div class="power-bar"><div id="powerFill" class="power-fill"></div></div>
       </div>
-      <div class="help">
-        Controles: Espaço = Pular (2x) · A = Atacar · S = Superpoder
-      </div>
+      <div class="help">Espaço = Pular · A = Atacar · S = Superpoder · P = Pausar · R = Reiniciar</div>
     </div>
 
-    <!-- 4: mensagem de estado (game over/pausa) importante -->
     <div id="msg" class="msg hidden"></div>
   </div>
 
-  <!-- 5 - chamar o game.js script principal -->
   <script src="game.js" defer></script>
 </body>
 </html>
