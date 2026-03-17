@@ -15,7 +15,7 @@ body {
   overflow: hidden;
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(235, 225, 225, 0.08);
   background-size: cover;
   background-position: center;
 }
@@ -43,9 +43,9 @@ body {
 }
 .power-fill {
   height: 100%; width: 0%;
-  background: linear-gradient(90deg, #38bdf8, #a78bfa);
+  background: linear-gradient(90deg, #ff7b00, #ff4400); 
   transition: width .15s ease;
-}
+} 
 
 .help {
   margin-left: auto;

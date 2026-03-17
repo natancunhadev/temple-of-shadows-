@@ -62,9 +62,9 @@ window.addEventListener('keyup', (e) => down.delete(e.key.toLowerCase()));
 /// (cores só para dar profundidade adicional ao background.png)
 // =============================
 const parallax = [
-  { speed: 20,  color: 'rgba(17,24,39,0.35)', h: 60, y: 60 },
-  { speed: 60,  color: 'rgba(15,23,42,0.45)', h: 70, y: 120 },
-  { speed: 120, color: 'rgba(2,6,23,0.6)',   h: 80, y: 180 },
+  { speed: 20,  color: 'rgba(17, 24, 39, 0)', h: 60, y: 60 },
+  { speed: 60,  color: 'rgba(15, 23, 42, 0)', h: 70, y: 120 },
+  { speed: 120, color: 'rgba(2, 6, 23, 0)',   h: 80, y: 180 },
 ];
 
 // =============================
@@ -301,9 +301,9 @@ function drawParallaxStrips() {
 }
 
 function drawGround() {
-  ctx.fillStyle = '#0f172a';
+  ctx.fillStyle = '#000000';
   ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
-  ctx.fillStyle = '#1f2937';
+  ctx.fillStyle = '#f22828';
   for (let x = 0; x < canvas.width; x += 32) {
     ctx.fillRect(x - (parallaxOffset % 32), groundY - 6, 16, 6);
   }
@@ -340,7 +340,7 @@ function restart() {
 }
 
 // =============================
-// game loop
+// ame loop
 // =============================
 function loop(ts) {
   const dt = Math.min(0.032, (ts - lastTime) / 1000);
