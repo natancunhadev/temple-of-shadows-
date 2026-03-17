@@ -5,20 +5,21 @@ ________________________________________________________________________________
 Temple of Shadows é um projeto de jogo web desenvolvido para explorar mecânicas de navegação lateral, estruturação visual, integração de personagen estilizado. A proposta combina design dark, estética rock/urbana e uma experiência imersiva, servindo também como prática de desenvolvimento criativo, lógica de interface e construção de projetos interativos para web.
 
 🎯 O objetivo
-________________________________________________________________________________________________________________________________________________________________
+______________________________________________________________________________________________________________________________________________________________
+
 Desenvolver um jogo web no estilo slide view, com foco em navegação fluida, construção visual marcante, aplicando conceitos de front-end, organização de assets e lógica de interação. Mentalmente, o projeto busca transmitir atenção, paciência e disciplina, levando o jogador a atravessar desafios.
 
 📁 Estrutura de pastas
 _____________________________________________________________________________________________________________________________________________________________
-temple-of-shadows-v1.1/
-│- index.html
-│--style.css
-│--- game.js
-└---- assets/
-    ├----- player.svg
-    ├------obstacle.svg
-    ├-------orb.svg
-    └-------- background.svg
+temple-of-shadows-v1.1/ 
+- index.html
+- style.css
+- game.js
+- assets/
+- player.svg
+- obstacle.svg
+- orb.svg
+- background.svg
     
 Arquivos e pastas presentes na raiz do projeto.
 
