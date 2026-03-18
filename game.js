@@ -31,11 +31,11 @@ imgOrb.src = 'assets/orb.png';
 // sounds
 // =============================
 const sfx = {
-  hit: new Audio('assets/hit.wav'),
-  orb: new Audio('assets/orb.wav'),
-  attack: new Audio('assets/attack.wav'),
-  special: new Audio('assets/special.wav'),
-  gameover: new Audio('assets/gameover.wav'),
+  hit: new Audio('assets/audio/hit.wav'),
+  orb: new Audio('assets/audio/orb.wav'),
+  attack: new Audio('assets/audio/attack.wav'),
+  special: new Audio('assets/audio/special.wav'),
+  gameover: new Audio('assets/audio/gameover.wav'),
 };
 
 function playSound(sound) {
