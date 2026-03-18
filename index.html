@@ -1,27 +1,38 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Temple Of Shadows v1.1</title>
-  <link rel="stylesheet" href="style.css"/>
-</head>
-<body>
-  <div class="game-wrapper" style="background-image: url('assets/background.png');">
-    <canvas id="game" width="960" height="540"></canvas>
+  <!DOCTYPE html>
+  <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Temple Of Shadows v1.3</title>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+    <div class="game-wrapper" style="background-image: url('assets/background.png');">
+      <canvas id="game" width="960" height="540"></canvas>
 
-    <div class="hud">
-      <div class="score">Score: <span id="score">0</span></div>
-      <div class="power">
-        <div class="power-label">POWER UP-8</div>
-        <div class="power-bar"><div id="powerFill" class="power-fill"></div></div>
+      <div class="hud">
+        <div class="score">Score: <span id="score">0</span></div>
+
+        <div class="life">
+          <div class="life-label">LIFE UP</div>
+          <div class="life-bar">
+            <div id="lifeFill" class="life-fill"></div>
+          </div>
+        </div>
+
+        <div class="power">
+          <div class="power-label">POWER UP-8</div>
+          <div class="power-bar">
+            <div id="powerFill" class="power-fill"></div>
+          </div>
+        </div>
+
+        <div class="help">Espaço = Pular · A = Atacar · S = Superpoder · P = Pausar · R = Reiniciar</div>
       </div>
-      <div class="help">Espaço = Pular · A = Atacar · S = Superpoder · P = Pausar · R = Reiniciar</div>
+
+      <div id="msg" class="msg hidden"></div>
     </div>
 
-    <div id="msg" class="msg hidden"></div>
-  </div>
-
-  <script src="game.js" defer></script>
-</body>
-</html>
+    <script src="game.js" defer></script>
+  </body>
+  </html>
