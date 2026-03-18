@@ -1,4 +1,4 @@
-2026.1 - Jogo Digital: Temple Of Shadows - Natan de Souza Cunha
+2026.1 - Jogo Digital: Temple Of Shadows v1.3 - Natan de Souza Cunha
 
 📜 Descrição
 ________________________________________________________________________________________________________________________________________________________________
@@ -11,15 +11,19 @@ Desenvolver um jogo web no estilo slide view, com foco em navegação fluida, co
 
 📁 Estrutura de pastas
 _____________________________________________________________________________________________________________________________________________________________
-temple-of-shadows-v1.1/ 
+temple-of-shadows-v1.3
 - index.html
 - style.css
 - game.js
 - assets/
-- player.svg
-- obstacle.svg
-- orb.svg
-- background.svg
+- player.png
+- obstacle.png
+- orb.png
+- background.png
+- attack.wav
+- special.wav
+- orb.wav
+- hit.wav
     
 Arquivos e pastas presentes na raiz do projeto.
 
@@ -31,5 +35,6 @@ ________________________________________________________________________________
 📜 Documentação base:
 _____________________________________________________________________________________________________________________________________________________________
 
-<img width="720" height="5776" alt="documentation_v1 1" src="https://github.com/user-attachments/assets/4a421db6-f2da-4feb-98b6-838f91280bb6" />
-
+<div align="center">
+<img width="500" height="7233" alt="documentation v1 3 official" src="https://github.com/user-attachments/assets/ef96412a-9315-4fd4-b888-0f6822f53b0b" />
+</div>
