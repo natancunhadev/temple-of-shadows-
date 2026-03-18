@@ -16,15 +16,16 @@ temple-of-shadows-v1.3
 - style.css
 - game.js
 - assets/
-- player.png
+- - player.png
 - obstacle.png
 - orb.png
 - background.png
+- audio/
 - attack.wav
-- special.wav
-- orb.wav
+- gameover.wav
 - hit.wav
-    
+- special.wav
+
 Arquivos e pastas presentes na raiz do projeto.
 
 🔧 Como executar o código
