@@ -1,3 +1,9 @@
+# 2026.1 - Jogo Digital: Temple Of Shadows v1.3 - Natan de Souza Cunha
+
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow)
+![Node.js](https://img.shields.io/badge/Node.js-runtime-green)
+![Status](https://img.shields.io/badge/status-orientado%20à%20pesquisa-black)
+
 2026.1 - Jogo Digital: Temple Of Shadows v1.3 - Natan de Souza Cunha
 
 📜 Descrição
