@@ -34,7 +34,7 @@ temple-of-shadows-v1.3
 
 Arquivos e pastas presentes na raiz do projeto.
 
-🔧 Como executar o código
+🔧 Como executar o código:
 _____________________________________________________________________________________________________________________________________________________________
 1 - Faça o clone do repositório no github - ou baixe os arquivos > Abra os arquivos no VSCODE > instalar a Extensão Live Server > Acompanhe a aba do Live Server > Jogo executado e rodando localmente. 
 
