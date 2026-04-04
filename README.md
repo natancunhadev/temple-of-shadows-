@@ -21,7 +21,7 @@ temple-of-shadows-v1.3
 - index.html
 - style.css
 - game.js
-- assets/
+- - assets/
 - - player.png
 - obstacle.png
 - orb.png
